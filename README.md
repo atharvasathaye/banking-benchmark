@@ -83,11 +83,15 @@ Open `http://localhost:3000` (or 8000).
 
 ```
 banking-benchmark/
-├── index.html      markup and section layout
-├── style.css       design tokens, component styles, responsive breakpoints
-├── data.js         CFPB counts, app store data, RICE opportunity register, roadmap
-├── charts.js       drawDonut, buildStackedChart, buildMatrix, animateCounter
-├── app.js          render functions, IntersectionObserver setup, DOMContentLoaded init
+├── index.html          markup and section layout
+├── style.css           design tokens, component styles, responsive breakpoints
+├── data.js             CFPB counts, app store data, RICE opportunity register, roadmap
+├── charts.js           drawDonut, buildStackedChart, buildMatrix, animateCounter
+├── app.js              render functions, IntersectionObserver setup, DOMContentLoaded init
+├── scripts/
+│   └── fetch-cfpb.js   pulls live complaint counts from CFPB API, patches data.js
+├── package.json
+├── METHODOLOGY.md      scoring assumptions, data source details, limitations
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -97,16 +101,27 @@ banking-benchmark/
 
 ## Updating the data
 
-CFPB counts will drift over time. To refresh:
+Run the fetch script to pull current CFPB counts:
 
 ```bash
-curl "https://www.consumerfinance.gov/data-research/consumer-complaints/search/api/v1/?company=TRUIST%20FINANCIAL%20CORPORATION&size=0" \
-  | jq '.hits.total.value'
+# dry run — prints live counts without writing anything
+node scripts/fetch-cfpb.js
+
+# write mode — patches data.js in place
+node scripts/fetch-cfpb.js --write
 ```
 
-Replace the `complaints` field in `data.js` for each bank. The normalization and RICE scoring recalculate automatically.
+The script uses Node's built-in `https` module — no npm install needed. It patches only the `complaints` fields in `data.js`, leaving deposit figures and app store data untouched.
 
-CFPB entity names that resolve correctly:
+After running with `--write`, review the diff before committing:
+
+```bash
+git diff data.js
+git add data.js
+git commit -m "chore: refresh CFPB complaint counts $(date +%Y-%m-%d)"
+```
+
+CFPB entity names that resolve correctly (exact match required):
 - `TRUIST FINANCIAL CORPORATION`
 - `BANK OF AMERICA, NATIONAL ASSOCIATION`
 - `JPMORGAN CHASE & CO.`
