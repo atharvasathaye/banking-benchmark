@@ -1,0 +1,37 @@
+name: Monthly CFPB data refresh
+
+on:
+  schedule:
+    # 07:00 UTC on the 1st of every month
+    # Staggered from the supply chain repo (5th) so they don't compete for runner time
+    - cron: "0 7 1 * *"
+  workflow_dispatch:  # manual trigger from GitHub UI
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch CFPB complaint counts
+        run: node scripts/fetch-cfpb.js --write
+
+      - name: Commit if counts changed
+        run: |
+          git config user.name  "Atharva Sathaye"
+          git config user.email "200531153+atharvasathaye@users.noreply.github.com"
+          git add data.js
+          git diff --cached --quiet || git commit -m "chore: refresh CFPB complaint counts $(date +'%Y-%m-%d')"
+          git push
