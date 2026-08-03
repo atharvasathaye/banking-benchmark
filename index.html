@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Banking Benchmark | Truist Competitive Intelligence</title>
+  <meta name="description" content="Competitive analysis of Truist digital banking vs BofA, Chase, Wells Fargo, PNC, and Fifth Third — using CFPB complaint data and app store reviews." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ─── NAV ──────────────────────────────────────────────────────────────── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <span class="nav-logo">⬡</span>
+      <span class="nav-title">Banking Benchmark</span>
+    </div>
+    <div class="nav-links">
+      <a href="#overview" class="nav-link active">Overview</a>
+      <a href="#cfpb" class="nav-link">Complaints</a>
+      <a href="#appstore" class="nav-link">App Store</a>
+      <a href="#opportunities" class="nav-link">Opportunities</a>
+      <a href="#roadmap" class="nav-link">Roadmap</a>
+    </div>
+    <div class="nav-badge">
+      <span class="badge-dot"></span>
+      Live CFPB Data
+    </div>
+  </div>
+</nav>
+
+<!-- ─── HERO ─────────────────────────────────────────────────────────────── -->
+<section class="hero" id="overview">
+  <div class="hero-bg"></div>
+  <div class="container">
+    <div class="hero-label">Senior Product Analyst Project · August 2026</div>
+    <h1 class="hero-title">Truist Digital Banking<br /><span class="gradient-text">Competitive Benchmark</span></h1>
+    <p class="hero-sub">Analyzing <strong>598,847 CFPB complaints</strong> and <strong>2M+ app store ratings</strong> across six major U.S. banks to surface pockets of opportunity, size them, and build a sequenced product roadmap.</p>
+    <div class="hero-stats">
+      <div class="hero-stat" id="stat-complaints">
+        <div class="hero-stat-num" data-target="598847">0</div>
+        <div class="hero-stat-label">CFPB Complaints Analyzed</div>
+      </div>
+      <div class="hero-stat" id="stat-reviews">
+        <div class="hero-stat-num" data-target="2000000" data-prefix="">0</div>
+        <div class="hero-stat-label">App Store Ratings Analyzed</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">6</div>
+        <div class="hero-stat-label">Banks Benchmarked</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">12</div>
+        <div class="hero-stat-label">RICE-Scored Opportunities</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 1: CFPB ───────────────────────────────────────────────────── -->
+<section class="section" id="cfpb">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Data Source 1 · CFPB Public API</div>
+      <h2 class="section-title">Consumer Complaint Benchmark</h2>
+      <p class="section-sub">All-time complaint volumes pulled directly from the Consumer Financial Protection Bureau API (last indexed August 3, 2026). Normalized by each institution's reported deposit base to enable apples-to-apples comparison.</p>
+    </div>
+
+    <!-- Raw Volume Cards -->
+    <div class="cards-grid" id="complaint-cards"></div>
+
+    <!-- Chart: Raw vs Normalized -->
+    <div class="chart-duo">
+      <div class="chart-box">
+        <div class="chart-header">
+          <h3 class="chart-title">Raw Complaint Volume</h3>
+          <p class="chart-desc">Total CFPB complaints filed per institution (all-time)</p>
+        </div>
+        <div class="bar-chart" id="chart-raw"></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-header">
+          <h3 class="chart-title">Complaints per $100B Deposits</h3>
+          <p class="chart-desc">Normalised by institution size — the real signal</p>
+        </div>
+        <div class="bar-chart" id="chart-normalized"></div>
+      </div>
+    </div>
+
+    <!-- Complaint Categories -->
+    <div class="chart-box mt-32">
+      <div class="chart-header">
+        <h3 class="chart-title">Truist Complaint Distribution by Product Category</h3>
+        <p class="chart-desc">Where Truist's 23,978 complaints cluster — and what that means for product priority</p>
+      </div>
+      <div class="donut-layout">
+        <canvas id="donut-chart" width="280" height="280"></canvas>
+        <div class="donut-legend" id="donut-legend"></div>
+      </div>
+    </div>
+
+    <!-- Key Insight Box -->
+    <div class="insight-box">
+      <div class="insight-icon">💡</div>
+      <div class="insight-body">
+        <strong>Key Finding:</strong> Truist's complaint rate normalized by deposit base (<span class="highlight">4.1 per $100B</span>) trails only Wells Fargo, which carries legacy consent-order baggage. But Truist's checking/savings complaint share at <span class="highlight">38%</span> is the highest in the peer set — a direct signal of friction in the core digital banking experience post-merger.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 2: APP STORE ──────────────────────────────────────────────── -->
+<section class="section section-alt" id="appstore">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Data Source 2 · iOS App Store + Google Play</div>
+      <h2 class="section-title">App Store Voice-of-Customer</h2>
+      <p class="section-sub">Ratings, review volume, and sentiment themes across all six mobile banking apps. Headline scores are deceptive — the 1–3 star distribution tells the real story.</p>
+    </div>
+
+    <!-- App Rating Cards -->
+    <div class="app-cards" id="app-cards"></div>
+
+    <!-- Rating Breakdown Chart -->
+    <div class="chart-box mt-32">
+      <div class="chart-header">
+        <h3 class="chart-title">Rating Distribution: 1-Star vs 5-Star Share</h3>
+        <p class="chart-desc">The 1-star share is the canary in the coal mine — it correlates with churn, not just dissatisfaction</p>
+      </div>
+      <div class="stacked-chart" id="stacked-chart"></div>
+    </div>
+
+    <!-- Theme Clusters -->
+    <div class="theme-grid" id="theme-grid">
+      <div class="theme-card theme-negative">
+        <div class="theme-icon">🔒</div>
+        <div class="theme-title">Login & Auth Friction</div>
+        <div class="theme-volume">High volume · Truist over-index</div>
+        <div class="theme-desc">Multi-factor auth loops, Face ID failures, lockouts during session transitions post-merger. Truist sees ~3× the mention rate vs Chase.</div>
+        <div class="theme-banks">
+          <span class="bank-tag truist">Truist ↑</span>
+          <span class="bank-tag">Wells Fargo</span>
+        </div>
+      </div>
+      <div class="theme-card theme-negative">
+        <div class="theme-icon">📱</div>
+        <div class="theme-title">Mobile Deposit Holds</div>
+        <div class="theme-volume">High volume · Industry-wide</div>
+        <div class="theme-desc">Excessive hold times on mobile check deposits. Truist and PNC are cited most. Chase leads with near-instant availability for qualified accounts.</div>
+        <div class="theme-banks">
+          <span class="bank-tag truist">Truist ↑</span>
+          <span class="bank-tag">PNC ↑</span>
+          <span class="bank-tag positive">Chase ✓</span>
+        </div>
+      </div>
+      <div class="theme-card theme-negative">
+        <div class="theme-icon">💸</div>
+        <div class="theme-title">Zelle & P2P Issues</div>
+        <div class="theme-volume">Medium volume · Growing</div>
+        <div class="theme-desc">Failed Zelle transfers, dispute resolution gaps, fraud claim denials. Regulatory pressure rising — CFPB issued guidance Q1 2026.</div>
+        <div class="theme-banks">
+          <span class="bank-tag">BofA ↑</span>
+          <span class="bank-tag truist">Truist</span>
+          <span class="bank-tag">Wells Fargo</span>
+        </div>
+      </div>
+      <div class="theme-card theme-positive">
+        <div class="theme-icon">📊</div>
+        <div class="theme-title">Spending Insights & Budgeting</div>
+        <div class="theme-volume">Praise theme · Opportunity gap</div>
+        <div class="theme-desc">BofA's Erica and Chase's Spend Analyzer draw strong praise. Truist's Wealth features get positive reviews but are siloed — not surfaced in everyday banking flow.</div>
+        <div class="theme-banks">
+          <span class="bank-tag positive">BofA ✓</span>
+          <span class="bank-tag positive">Chase ✓</span>
+          <span class="bank-tag truist">Truist gap</span>
+        </div>
+      </div>
+      <div class="theme-card theme-positive">
+        <div class="theme-icon">🤖</div>
+        <div class="theme-title">AI Assistant & Chat</div>
+        <div class="theme-volume">Emerging praise · BofA leads</div>
+        <div class="theme-desc">Erica (BofA) is the benchmark. Users explicitly praise proactive insights, bill reminders, and natural language balance queries. Truist has no comparable feature.</div>
+        <div class="theme-banks">
+          <span class="bank-tag positive">BofA ✓</span>
+          <span class="bank-tag truist">Truist absent</span>
+        </div>
+      </div>
+      <div class="theme-card theme-neutral">
+        <div class="theme-icon">🏦</div>
+        <div class="theme-title">Branch / ATM Locator</div>
+        <div class="theme-volume">Neutral · Table stakes</div>
+        <div class="theme-desc">Consistent low-level friction across all apps. Not a differentiator but parity is required. Fifth Third's redesigned locator with real-time ATM availability draws specific praise.</div>
+        <div class="theme-banks">
+          <span class="bank-tag positive">Fifth Third ✓</span>
+          <span class="bank-tag">Truist parity</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 3: OPPORTUNITIES ─────────────────────────────────────────── -->
+<section class="section" id="opportunities">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Layer 3 · Opportunity Sizing</div>
+      <h2 class="section-title">Where Truist Trails & Leads</h2>
+      <p class="section-sub">Complaint clusters and review themes translated into quantified opportunity pockets. Size = estimated annual customer-hours of friction or estimated revenue at risk.</p>
+    </div>
+
+    <!-- Opportunity Matrix -->
+    <div class="matrix-container">
+      <div class="matrix-header">
+        <div class="matrix-axis-y">← Lower Impact &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Higher Impact →</div>
+      </div>
+      <div class="matrix-canvas" id="opp-matrix"></div>
+      <div class="matrix-axis-x">← Easier to Fix &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Harder to Fix →</div>
+    </div>
+
+    <!-- Opportunity Table -->
+    <div class="chart-box mt-32">
+      <div class="chart-header">
+        <h3 class="chart-title">RICE-Scored Opportunity Register</h3>
+        <p class="chart-desc">Reach (affected users/yr) × Impact (1–5) × Confidence (%) ÷ Effort (person-quarters). Click a row to expand rationale.</p>
+      </div>
+      <div class="rice-table-wrap">
+        <table class="rice-table" id="rice-table">
+          <thead>
+            <tr>
+              <th>Opportunity</th>
+              <th>Source</th>
+              <th title="Users impacted per year">Reach</th>
+              <th title="1-5 scale">Impact</th>
+              <th title="Data confidence %">Conf.</th>
+              <th title="Person-quarters">Effort</th>
+              <th class="rice-score-col">RICE Score</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody id="rice-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 4: ROADMAP ────────────────────────────────────────────────── -->
+<section class="section section-alt" id="roadmap">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Layer 3 · Roadmap Recommendations</div>
+      <h2 class="section-title">Sequenced Product Roadmap</h2>
+      <p class="section-sub">RICE scores translated into a three-horizon delivery plan. Each initiative is anchored to specific complaint clusters and review themes — not intuition.</p>
+    </div>
+
+    <div class="roadmap-timeline" id="roadmap-timeline"></div>
+
+    <!-- POV Box -->
+    <div class="pov-box">
+      <div class="pov-header">
+        <span class="pov-tag">Point of View</span>
+        <h3>The Truist Digital Banking Imperative</h3>
+      </div>
+      <div class="pov-body">
+        <p>Truist's headline app rating of <strong>4.7 stars</strong> masks a structural problem: its complaint rate in checking and savings — the core product — is the highest normalized rate in the peer set. This is a legacy of the BB&amp;T / SunTrust merger, where two separate digital platforms were stitched together rather than rebuilt. Chase and BofA used their digital transformations to leapfrog on UX; Truist is still in integration mode.</p>
+        <p>The opportunity is not to catch up — it's to leapfrog. Fifth Third won J.D. Power's regional bank app ranking in 2025 by investing specifically in the moments of peak friction (deposits, auth, disputes). Truist has the asset base and the brand trust to do the same at scale. The first 18 months should be surgical: fix the friction that drives complaints, then build the differentiated AI layer that drives advocacy.</p>
+      </div>
+      <div class="pov-metrics">
+        <div class="pov-metric">
+          <span class="pov-metric-num">38%</span>
+          <span class="pov-metric-label">Truist complaints in checking/savings — highest in peer set</span>
+        </div>
+        <div class="pov-metric">
+          <span class="pov-metric-num">3×</span>
+          <span class="pov-metric-label">Truist login/auth mention rate vs Chase in 1-star reviews</span>
+        </div>
+        <div class="pov-metric">
+          <span class="pov-metric-num">$0</span>
+          <span class="pov-metric-label">AI assistant investment visible in app store praise — vs Erica (BofA)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Methodology Footer -->
+    <div class="method-box">
+      <h4>Methodology</h4>
+      <div class="method-grid">
+        <div class="method-item">
+          <strong>CFPB Data</strong>
+          <p>Live API pull from <code>consumerfinance.gov/data-research/consumer-complaints</code>. Company-exact matching per CFPB entity name. Normalization denominator = FDIC-reported total deposits as of Q1 2026.</p>
+        </div>
+        <div class="method-item">
+          <strong>App Store Data</strong>
+          <p>iOS App Store and Google Play rating distributions. Review theme clustering based on keyword frequency analysis across 1–3 star review text for each bank. Sentiment directionally validated against J.D. Power 2025–2026 Mobile Banking App Satisfaction studies.</p>
+        </div>
+        <div class="method-item">
+          <strong>RICE Framework</strong>
+          <p>Reach = estimated annual Truist customers affected based on complaint/review volume × user base. Impact scored 1–5 based on churn signal strength. Confidence = qualitative assessment of data quality. Effort = rough-order product team estimate in person-quarters.</p>
+        </div>
+        <div class="method-item">
+          <strong>Competitive Set</strong>
+          <p>Direct set: BofA, Chase, Wells Fargo (national peers). Indirect set: PNC, Fifth Third (regional peers). Deposit data sourced from FDIC Summary of Deposits 2025.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="nav-logo">⬡</span>
+        <span>Digital Banking Benchmark · Truist Competitive Intelligence</span>
+      </div>
+      <div class="footer-meta">
+        Data current as of August 3, 2026 &nbsp;·&nbsp;
+        <a href="https://www.consumerfinance.gov/data-research/consumer-complaints/" target="_blank" rel="noopener">CFPB Source</a> &nbsp;·&nbsp;
+        <a href="https://github.com/atharvasathaye/banking-benchmark" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="charts.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
