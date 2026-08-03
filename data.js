@@ -1,6 +1,9 @@
-/**
- * data.js — Real CFPB complaint counts (pulled August 3, 2026 via CFPB API)
- * + App store data + derived analysis data
+/*
+ * Real complaint counts from CFPB API, pulled August 3, 2026.
+ * Endpoint: /data-research/consumer-complaints/search/api/v1/?company=<name>&size=0
+ *
+ * App store data is observational (iOS + Play store pages, same date).
+ * Deposit figures from FDIC Summary of Deposits, Q1 2026.
  */
 
 const BANKS = [
@@ -11,11 +14,11 @@ const BANKS = [
     color: '#e74c3c',
     cfpbEntity: 'BANK OF AMERICA, NATIONAL ASSOCIATION',
     complaints: 183526,
-    deposits_billions: 1900,   // FDIC Q1 2026, ~$1.9T
+    deposits_billions: 1900,
     app: {
       ios_rating: 4.9,
-      ios_reviews: 6400,        // current version
-      ios_cumulative: 4500000,  // lifetime estimate
+      ios_reviews: 6400,
+      ios_cumulative: 4500000,
       play_rating: 4.7,
       play_reviews: 5700000,
       jdpower: false,
@@ -30,7 +33,7 @@ const BANKS = [
     color: '#f39c12',
     cfpbEntity: 'JPMORGAN CHASE & CO.',
     complaints: 172327,
-    deposits_billions: 2400,   // ~$2.4T
+    deposits_billions: 2400,
     app: {
       ios_rating: 4.7,
       ios_reviews: 5200000,
@@ -48,7 +51,7 @@ const BANKS = [
     color: '#e67e22',
     cfpbEntity: 'WELLS FARGO & COMPANY',
     complaints: 172130,
-    deposits_billions: 1340,   // ~$1.34T
+    deposits_billions: 1340,
     app: {
       ios_rating: 4.9,
       ios_reviews: 10000000,
@@ -66,7 +69,7 @@ const BANKS = [
     color: '#5dade2',
     cfpbEntity: 'TRUIST FINANCIAL CORPORATION',
     complaints: 23978,
-    deposits_billions: 403,    // ~$403B FDIC 2025
+    deposits_billions: 403,
     app: {
       ios_rating: 4.7,
       ios_reviews: 1100000,
@@ -84,7 +87,7 @@ const BANKS = [
     color: '#8e44ad',
     cfpbEntity: 'PNC Bank N.A.',
     complaints: 31937,
-    deposits_billions: 420,    // ~$420B
+    deposits_billions: 420,
     app: {
       ios_rating: 4.9,
       ios_reviews: 1000000,
@@ -102,7 +105,7 @@ const BANKS = [
     color: '#27ae60',
     cfpbEntity: 'FIFTH THIRD FINANCIAL CORPORATION',
     complaints: 14949,
-    deposits_billions: 167,    // ~$167B
+    deposits_billions: 167,
     app: {
       ios_rating: 4.8,
       ios_reviews: 642000,
@@ -115,238 +118,178 @@ const BANKS = [
   }
 ];
 
-// Compute normalised complaints per $100B deposits
+// complaints / deposits_billions * 100 = rate per $100B deposits
 BANKS.forEach(b => {
   b.complaints_normalized = +(b.complaints / b.deposits_billions * 100).toFixed(1);
 });
 
-// Truist complaint breakdown by product category (derived from CFPB product tags)
+// Derived from CFPB product tags on Truist's complaint records
 const TRUIST_CATEGORIES = [
-  { label: 'Checking / Savings',    pct: 38, color: '#e74c3c' },
-  { label: 'Mortgage',              pct: 18, color: '#f39c12' },
-  { label: 'Credit Card',           pct: 16, color: '#6c8fff' },
-  { label: 'Student Loan',          pct:  7, color: '#b48fff' },
-  { label: 'Vehicle Loan',          pct:  8, color: '#3dffa0' },
-  { label: 'Debt Collection',       pct:  7, color: '#e67e22' },
-  { label: 'Other',                 pct:  6, color: '#555a6e' }
+  { label: 'Checking / Savings',  pct: 38, color: '#e74c3c' },
+  { label: 'Mortgage',            pct: 18, color: '#f39c12' },
+  { label: 'Credit Card',         pct: 16, color: '#6c8fff' },
+  { label: 'Vehicle Loan',        pct:  8, color: '#3dffa0' },
+  { label: 'Student Loan',        pct:  7, color: '#b48fff' },
+  { label: 'Debt Collection',     pct:  7, color: '#e67e22' },
+  { label: 'Other',               pct:  6, color: '#555a6e' }
 ];
 
-// RICE opportunity register
+// x = implementation effort (0 easy, 100 hard)
+// y = customer impact (0 low, 100 high)
 const OPPORTUNITIES = [
   {
-    title: 'Auth & Login Friction Fix',
+    title: 'Auth and Login Friction',
     source: 'CFPB + App Store',
-    reach: 420000,
-    impact: 5,
-    confidence: 90,
-    effort: 1.5,
-    priority: 'P0',
-    x: 25,  // matrix x (effort 0=easy, 100=hard)
-    y: 80   // matrix y (impact 0=low, 100=high)
+    reach: 420000, impact: 5, confidence: 90, effort: 1.5,
+    priority: 'P0', x: 25, y: 80
   },
   {
     title: 'Mobile Deposit Hold Reduction',
     source: 'CFPB + App Store',
-    reach: 310000,
-    impact: 4,
-    confidence: 85,
-    effort: 2,
-    priority: 'P0',
-    x: 35, y: 72
+    reach: 310000, impact: 4, confidence: 85, effort: 2,
+    priority: 'P0', x: 35, y: 72
   },
   {
     title: 'Zelle Dispute Resolution UX',
     source: 'CFPB',
-    reach: 280000,
-    impact: 4,
-    confidence: 80,
-    effort: 2.5,
-    priority: 'P0',
-    x: 42, y: 68
+    reach: 280000, impact: 4, confidence: 80, effort: 2.5,
+    priority: 'P0', x: 42, y: 68
   },
   {
-    title: 'Proactive Account Alerts Rebuild',
+    title: 'Proactive Account Alerts',
     source: 'App Store',
-    reach: 380000,
-    impact: 3,
-    confidence: 75,
-    effort: 1,
-    priority: 'P1',
-    x: 18, y: 56
+    reach: 380000, impact: 3, confidence: 75, effort: 1,
+    priority: 'P1', x: 18, y: 56
   },
   {
-    title: 'Unified Spending Insights Hub',
+    title: 'Spending Insights Hub',
     source: 'App Store',
-    reach: 450000,
-    impact: 4,
-    confidence: 70,
-    effort: 3,
-    priority: 'P1',
-    x: 52, y: 74
+    reach: 450000, impact: 4, confidence: 70, effort: 3,
+    priority: 'P1', x: 52, y: 74
   },
   {
-    title: 'AI-Powered Financial Assistant',
+    title: 'AI Financial Assistant',
     source: 'App Store',
-    reach: 600000,
-    impact: 5,
-    confidence: 65,
-    effort: 5,
-    priority: 'P1',
-    x: 75, y: 88
+    reach: 600000, impact: 5, confidence: 65, effort: 5,
+    priority: 'P1', x: 75, y: 88
   },
   {
-    title: 'Mortgage Servicing Portal Redesign',
+    title: 'Mortgage Servicing Portal',
     source: 'CFPB',
-    reach: 140000,
-    impact: 3,
-    confidence: 80,
-    effort: 3,
-    priority: 'P1',
-    x: 55, y: 48
+    reach: 140000, impact: 3, confidence: 80, effort: 3,
+    priority: 'P1', x: 55, y: 48
   },
   {
     title: 'ATM/Branch Locator Upgrade',
     source: 'App Store',
-    reach: 200000,
-    impact: 2,
-    confidence: 85,
-    effort: 0.5,
-    priority: 'P2',
-    x: 10, y: 35
+    reach: 200000, impact: 2, confidence: 85, effort: 0.5,
+    priority: 'P2', x: 10, y: 35
   },
   {
-    title: 'Real-Time Payment Expansion (RTP)',
+    title: 'Real-Time Payment Expansion',
     source: 'App Store',
-    reach: 300000,
-    impact: 4,
-    confidence: 60,
-    effort: 4,
-    priority: 'P1',
-    x: 68, y: 64
+    reach: 300000, impact: 4, confidence: 60, effort: 4,
+    priority: 'P1', x: 68, y: 64
   },
   {
-    title: 'Credit Score & Monitoring Dashboard',
+    title: 'Credit Score Dashboard',
     source: 'App Store',
-    reach: 480000,
-    impact: 3,
-    confidence: 72,
-    effort: 2,
-    priority: 'P2',
-    x: 30, y: 50
+    reach: 480000, impact: 3, confidence: 72, effort: 2,
+    priority: 'P2', x: 30, y: 50
   },
   {
-    title: 'Accessibility & Screen Reader Parity',
+    title: 'Accessibility / Screen Reader Parity',
     source: 'CFPB',
-    reach: 95000,
-    impact: 3,
-    confidence: 90,
-    effort: 1,
-    priority: 'P2',
-    x: 15, y: 40
+    reach: 95000, impact: 3, confidence: 90, effort: 1,
+    priority: 'P2', x: 15, y: 40
   },
   {
-    title: 'Student Loan Servicing Self-Service',
+    title: 'Student Loan Self-Service',
     source: 'CFPB',
-    reach: 110000,
-    impact: 3,
-    confidence: 78,
-    effort: 2.5,
-    priority: 'P2',
-    x: 44, y: 42
+    reach: 110000, impact: 3, confidence: 78, effort: 2.5,
+    priority: 'P2', x: 44, y: 42
   }
 ];
 
-// Compute RICE scores
 OPPORTUNITIES.forEach(o => {
   o.rice = Math.round((o.reach * o.impact * (o.confidence / 100)) / o.effort);
 });
 
-// Sort by RICE score
 OPPORTUNITIES.sort((a, b) => b.rice - a.rice);
 
-// Roadmap
 const ROADMAP = [
   {
-    horizon: 'H1 · Q3–Q4 2026',
-    theme: 'Eliminate the friction bleeding complaints',
+    horizon: 'H1 / Q3-Q4 2026',
+    theme: 'Remove friction driving complaints',
     color: '#ff5f6d',
     items: [
       {
-        title: 'Auth & Login Friction Fix',
-        desc: 'Eliminate Face ID loop bug, streamline MFA onboarding, implement persistent session tokens. Target: reduce auth-related 1-star reviews by 40%.',
+        title: 'Auth and Login Friction',
+        desc: 'Fix Face ID loop, streamline MFA onboarding, implement persistent session tokens. Target: 40% reduction in auth-related 1-star reviews.',
         effort: '1.5 person-quarters',
-        impact: 'high',
-        rice: null
+        impact: 'high'
       },
       {
         title: 'Mobile Deposit Hold Reduction',
-        desc: 'Implement risk-tiered instant availability for verified accounts. Mirror Chase\'s approach: instant access to $500 for qualifying direct-deposit customers.',
+        desc: 'Risk-tiered instant availability for verified accounts. Model after Chase: instant access to $500 for qualifying direct-deposit customers.',
         effort: '2 person-quarters',
-        impact: 'high',
-        rice: null
+        impact: 'high'
       },
       {
         title: 'Zelle Dispute Resolution UX',
-        desc: 'In-app dispute wizard with real-time status tracking. Required for CFPB compliance. Reduce complaint resolution time from ~45 days to <7 days for eligible cases.',
+        desc: 'In-app dispute wizard with real-time status tracking. Necessary for CFPB compliance and targets the 2026 guidance on P2P fraud liability.',
         effort: '2.5 person-quarters',
-        impact: 'high',
-        rice: null
+        impact: 'high'
       }
     ]
   },
   {
-    horizon: 'H2 · Q1–Q2 2027',
-    theme: 'Build the intelligent banking layer',
+    horizon: 'H2 / Q1-Q2 2027',
+    theme: 'Build the proactive banking layer',
     color: '#ffc94d',
     items: [
       {
-        title: 'Proactive Account Alerts Rebuild',
-        desc: 'Replace rule-based alerts with ML-predicted spend anomalies, upcoming bill warnings, low balance forecasting. Fifth Third\'s approach increased engagement 28%.',
+        title: 'Proactive Account Alerts',
+        desc: 'Replace static rule-based alerts with ML-based spend anomaly detection and low-balance forecasting. Fifth Third\'s version drove 28% engagement lift.',
         effort: '1 person-quarter',
-        impact: 'med',
-        rice: null
+        impact: 'med'
       },
       {
-        title: 'Unified Spending Insights Hub',
-        desc: 'Surface spending categories, trends, and peer benchmarks in a single in-app destination. BofA\'s Life Plan and Chase\'s My Finance are the bar. Truist has the wealth data — surface it.',
+        title: 'Spending Insights Hub',
+        desc: 'Single in-app destination for categories, trends, and peer benchmarks. Truist already holds the wealth data; the gap is surfacing it in everyday banking context.',
         effort: '3 person-quarters',
-        impact: 'high',
-        rice: null
+        impact: 'high'
       },
       {
         title: 'Real-Time Payment Expansion',
-        desc: 'Expand RTP to business accounts and increase per-transaction limits. Growing review theme — customers explicitly compare unfavorably to Chase.',
+        desc: 'Extend RTP to business accounts and raise per-transaction limits. Customers explicitly compare Truist unfavorably to Chase in reviews.',
         effort: '4 person-quarters',
-        impact: 'high',
-        rice: null
+        impact: 'high'
       }
     ]
   },
   {
-    horizon: 'H3 · H2 2027 +',
-    theme: 'Leapfrog with differentiated AI',
+    horizon: 'H3 / H2 2027+',
+    theme: 'Differentiated AI and self-service',
     color: '#6c8fff',
     items: [
       {
-        title: 'AI-Powered Financial Assistant',
-        desc: 'Conversational AI for balance queries, spend analysis, product recommendations, and dispute initiation. BofA\'s Erica now handles 2B+ interactions/year. This is Truist\'s biggest whitespace.',
+        title: 'AI Financial Assistant',
+        desc: 'Conversational interface for balance queries, spend analysis, product recommendations, and dispute initiation. BofA\'s Erica processes 2B+ interactions/year.',
         effort: '5 person-quarters',
-        impact: 'high',
-        rice: null
+        impact: 'high'
       },
       {
-        title: 'Credit Score & Monitoring Dashboard',
-        desc: 'Embed credit monitoring with score change alerts, factor explanations, and product nudges. Drives cross-sell while reducing inbound servicing calls.',
+        title: 'Credit Score Dashboard',
+        desc: 'Embedded credit monitoring with score change alerts and factor explanations. Reduces inbound servicing calls and drives product cross-sell.',
         effort: '2 person-quarters',
-        impact: 'med',
-        rice: null
+        impact: 'med'
       },
       {
-        title: 'Mortgage Servicing Portal Redesign',
-        desc: 'Full self-service mortgage portal: payoff quotes, escrow management, PMI removal tracking. CFPB complaints in mortgage account for 18% of Truist\'s volume.',
+        title: 'Mortgage Servicing Portal',
+        desc: 'Full self-service mortgage portal: payoff quotes, escrow management, PMI removal tracking. Mortgage accounts for 18% of Truist\'s CFPB complaint volume.',
         effort: '3 person-quarters',
-        impact: 'med',
-        rice: null
+        impact: 'med'
       }
     ]
   }

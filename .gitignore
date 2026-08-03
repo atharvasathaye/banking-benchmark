@@ -1,0 +1,23 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Build output (none currently, but in case a bundler is added later)
+dist/
+build/
+
+# Dependency directories
+node_modules/
+
+# Environment files
+.env
+.env.local
