@@ -1,26 +1,22 @@
-# banking-benchmark
+# Banking Benchmark
 
-Competitive analysis of Truist's digital banking product against BofA, Chase, Wells Fargo, PNC, and Fifth Third. Uses two public data sources: the CFPB consumer complaint database and app store ratings.
+Competitive analysis of Truist's digital banking product against Bank of America, JPMorgan Chase, Wells Fargo, PNC, and Fifth Third. Uses two public data sources: the CFPB consumer complaint database and mobile app store ratings.
 
-**Live:** https://atharvasathaye.github.io/banking-benchmark
+**Live Demo:** https://atharvasathaye.github.io/banking-benchmark
 
----
+## Overview
 
-## What this is
+A single-page analytical dashboard addressing three key objectives:
 
-A single-page dashboard that answers three questions:
+1. Comparing Truist's complaint rate to peer institutions while controlling for deposit size.
+2. Categorizing mobile app feedback and sentiment across competitors.
+3. Establishing a prioritized product roadmap using a RICE-scored backlog.
 
-1. How does Truist's complaint rate compare to peers, controlling for institution size?
-2. What are customers praising and complaining about in each bank's mobile app?
-3. Where should Truist invest, and in what order?
+The primary objective is opportunity sizing and roadmap sequencing. The complaint and review data serve as quantitative inputs into the RICE framework.
 
-The third layer — opportunity sizing and roadmap sequencing — is the main point. The complaint and review data are inputs into a RICE-scored backlog, not the destination.
+## Data Sources
 
----
-
-## Data
-
-**CFPB complaint counts** (pulled August 3, 2026 via public API):
+**CFPB Complaint Data** (retrieved August 3, 2026 via public API):
 
 | Institution | Complaints | Per $100B deposits |
 |---|---:|---:|
@@ -31,27 +27,24 @@ The third layer — opportunity sizing and roadmap sequencing — is the main po
 | PNC Bank | 31,937 | 7.6 |
 | Fifth Third | 14,949 | 8.9 |
 
-Endpoint used: `GET /data-research/consumer-complaints/search/api/v1/?company=<entity>&size=0`
+- **Endpoint**: `GET /data-research/consumer-complaints/search/api/v1/?company=<entity>&size=0`
+- **Normalization**: FDIC Summary of Deposits (Q1 2026). Formula: `complaints / deposits_billions * 100`.
 
-Deposit figures from FDIC Summary of Deposits, Q1 2026. Normalization formula: `complaints / deposits_billions * 100`.
-
-**App store data:** iOS and Google Play rating distributions, observational, same date. Cross-validated against J.D. Power 2025-2026 Mobile Banking App Satisfaction studies.
-
----
+**App Store Data**: iOS and Google Play rating distributions cross-validated against J.D. Power Mobile Banking App Satisfaction studies.
 
 ## Architecture
 
-No build step. Three JS files loaded in sequence:
+No external build pipeline. Three JavaScript modules loaded sequentially:
 
 ```
-data.js     raw numbers and derived metrics
-charts.js   canvas rendering (donut, bar), DOM builders for stacked/matrix charts
-app.js      wires data into DOM, manages IntersectionObserver animations
+data.js     Raw datasets and derived metrics.
+charts.js   Canvas chart rendering routines (donut, bar) and DOM builders.
+app.js      DOM state management and IntersectionObserver animations.
 ```
 
-All chart rendering is vanilla canvas or DOM — no charting library dependency. The choice was deliberate: the project is a portfolio artifact, so showing the rendering logic is part of the point.
+All chart visualization is implemented using native HTML5 Canvas and DOM manipulation without third-party charting library dependencies.
 
-RICE scores are computed at load time in `data.js`:
+RICE scores are evaluated dynamically at client load time in `data.js`:
 
 ```js
 OPPORTUNITIES.forEach(o => {
@@ -59,69 +52,51 @@ OPPORTUNITIES.forEach(o => {
 });
 ```
 
-Sorted descending before rendering, so the table and roadmap always reflect the current scoring.
+Arrays are sorted in descending order prior to rendering to keep the matrix and backlog synchronized.
 
----
-
-## Running locally
+## Local Execution
 
 ```bash
 git clone https://github.com/atharvasathaye/banking-benchmark
 cd banking-benchmark
-
-# any local server works — file:// will block the Google Fonts request
 npx serve .
-# or
-python -m http.server 8000
 ```
 
-Open `http://localhost:3000` (or 8000).
+Access the local server at `http://localhost:3000`.
 
----
-
-## File structure
+## Repository Structure
 
 ```
 banking-benchmark/
-├── index.html          markup and section layout
-├── style.css           design tokens, component styles, responsive breakpoints
-├── data.js             CFPB counts, app store data, RICE opportunity register, roadmap
-├── charts.js           drawDonut, buildStackedChart, buildMatrix, animateCounter
-├── app.js              render functions, IntersectionObserver setup, DOMContentLoaded init
+├── index.html          Main application markup and layout structure
+├── style.css           Design system tokens, component styles, and media queries
+├── data.js             CFPB data, app store metrics, and RICE scoring engine
+├── charts.js           Canvas chart renderers and element generators
+├── app.js              Application initialization and DOM bindings
 ├── scripts/
-│   └── fetch-cfpb.js   pulls live complaint counts from CFPB API, patches data.js
-├── package.json
-├── METHODOLOGY.md      scoring assumptions, data source details, limitations
+│   └── fetch-cfpb.js   Node.js script to update CFPB metrics directly from API
+├── package.json        Project metadata
+├── METHODOLOGY.md      Scoring framework, data definitions, and constraints
 ├── .gitignore
 ├── LICENSE
 └── README.md
 ```
 
----
+## Data Maintenance
 
-## Updating the data
-
-Run the fetch script to pull current CFPB counts:
+To refresh CFPB complaint metrics:
 
 ```bash
-# dry run — prints live counts without writing anything
+# Dry run to verify API response
 node scripts/fetch-cfpb.js
 
-# write mode — patches data.js in place
+# Update data.js with active API metrics
 node scripts/fetch-cfpb.js --write
 ```
 
-The script uses Node's built-in `https` module — no npm install needed. It patches only the `complaints` fields in `data.js`, leaving deposit figures and app store data untouched.
+The updater utilizes the standard Node.js `https` package without third-party dependencies. It updates complaint totals in `data.js` while maintaining manual deposit and app rating parameters.
 
-After running with `--write`, review the diff before committing:
-
-```bash
-git diff data.js
-git add data.js
-git commit -m "chore: refresh CFPB complaint counts $(date +%Y-%m-%d)"
-```
-
-CFPB entity names that resolve correctly (exact match required):
+Target CFPB entity identifiers:
 - `TRUIST FINANCIAL CORPORATION`
 - `BANK OF AMERICA, NATIONAL ASSOCIATION`
 - `JPMORGAN CHASE & CO.`
@@ -129,25 +104,18 @@ CFPB entity names that resolve correctly (exact match required):
 - `PNC Bank N.A.`
 - `FIFTH THIRD FINANCIAL CORPORATION`
 
----
+## Technical Limitations
 
-## Limitations
+- App store sentiment clusters rely on keyword frequency sampling across visible reviews.
+- RICE reach estimations use total active user ratios and provide order-of-magnitude comparisons.
+- Complaint totals reflect post-2020 data to account for the BB&T and SunTrust merger timeline.
 
-- App store theme clusters are based on keyword frequency in visible reviews, not a full corpus. Directionally consistent with J.D. Power data but not statistically rigorous.
-- RICE reach estimates are derived from complaint share applied to Truist's estimated active user base. Treat them as order-of-magnitude, not precise forecasts.
-- Complaint counts are all-time totals. Truist's entity only exists post-2020 (BB&T/SunTrust merger), so its raw count is not directly comparable to legacy institutions.
+## Future Engineering Roadmap
 
----
-
-## Future work
-
-- Pull date-filtered complaint counts (2022 onward) to normalize the merger timing issue
-- Automate CFPB data refresh via GitHub Actions on a weekly schedule
-- Add Google Play rating data with a scraper or third-party API
-- Break out Truist complaint trends by quarter to show post-merger trajectory
-
----
+- Implement historical date filtering (2022 onward) to refine post-merger comparisons.
+- Automate weekly data ingestion workflows via GitHub Actions.
+- Expand Play Store scraper pipeline for real-time rating tracking.
+- Quarterly breakdown of complaint volume for trend trajectory analysis.
 
 ## Author
-
 Atharva Sathaye
