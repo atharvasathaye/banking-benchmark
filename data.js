@@ -13,7 +13,7 @@ const BANKS = [
     short: 'BofA',
     color: '#e74c3c',
     cfpbEntity: 'BANK OF AMERICA, NATIONAL ASSOCIATION',
-    complaints: 183526,
+    complaints: 97913,
     deposits_billions: 1900,
     app: {
       ios_rating: 4.9,
@@ -32,7 +32,7 @@ const BANKS = [
     short: 'Chase',
     color: '#f39c12',
     cfpbEntity: 'JPMORGAN CHASE & CO.',
-    complaints: 172327,
+    complaints: 108722,
     deposits_billions: 2400,
     app: {
       ios_rating: 4.7,
@@ -50,7 +50,7 @@ const BANKS = [
     short: 'Wells Fargo',
     color: '#e67e22',
     cfpbEntity: 'WELLS FARGO & COMPANY',
-    complaints: 172130,
+    complaints: 98096,
     deposits_billions: 1340,
     app: {
       ios_rating: 4.9,
@@ -68,7 +68,7 @@ const BANKS = [
     short: 'Truist',
     color: '#5dade2',
     cfpbEntity: 'TRUIST FINANCIAL CORPORATION',
-    complaints: 23978,
+    complaints: 24412,
     deposits_billions: 403,
     app: {
       ios_rating: 4.7,
@@ -86,7 +86,7 @@ const BANKS = [
     short: 'PNC',
     color: '#8e44ad',
     cfpbEntity: 'PNC Bank N.A.',
-    complaints: 31937,
+    complaints: 19468,
     deposits_billions: 420,
     app: {
       ios_rating: 4.9,
@@ -104,7 +104,7 @@ const BANKS = [
     short: 'Fifth Third',
     color: '#27ae60',
     cfpbEntity: 'FIFTH THIRD FINANCIAL CORPORATION',
-    complaints: 14949,
+    complaints: 9187,
     deposits_billions: 167,
     app: {
       ios_rating: 4.8,
